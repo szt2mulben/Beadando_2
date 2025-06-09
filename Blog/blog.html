@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+    const btn        = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const iconOpen   = document.getElementById('icon-open');
+    const iconClose  = document.getElementById('icon-close');
+    const openBtn    = document.getElementById('open-modal');
+    const openBtnMob = document.getElementById('open-modal-mobile');
+    const closeBtn   = document.getElementById('close-modal');
+    const modal      = document.getElementById('modal');
+    const navbar     = document.getElementById('navbar');
+
+    if (btn) {
+      btn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('max-h-0');
+        mobileMenu.classList.toggle('max-h-screen');
+        iconOpen.classList.toggle('hidden');
+        iconClose.classList.toggle('hidden');
+      });
+    }
+
+    let lastY = window.scrollY;
+    if (navbar) {
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > lastY) navbar.classList.add('-translate-y-full');
+        else                          navbar.classList.remove('-translate-y-full');
+        lastY = window.scrollY;
+      });
+    }
+
+    function toggleModal() {
+      if (!modal) return;
+      const isOpen = modal.classList.contains('opacity-100');
+      modal.classList.toggle('opacity-100', !isOpen);
+      modal.classList.toggle('opacity-0',    isOpen);
+      modal.classList.toggle('pointer-events-auto', !isOpen);
+      modal.classList.toggle('pointer-events-none', isOpen);
+    }
+    if (openBtn)     openBtn.addEventListener('click', toggleModal);
+    if (openBtnMob)  openBtnMob.addEventListener('click', toggleModal);
+    if (closeBtn)    closeBtn.addEventListener('click', toggleModal);
+    if (modal)       modal.addEventListener('click', e => e.target === modal && toggleModal());
+  });
+document.addEventListener('DOMContentLoaded', () => {
+  const name   = localStorage.getItem('vaszilij_username');
+  const logged = Boolean(name);
+
+  document.querySelectorAll('.profile-logged').forEach(el => {
+    if (logged) el.classList.remove('hidden');
+    else        el.classList.add   ('hidden');
+  });
+
+  document.querySelectorAll('.profile-guest').forEach(el => {
+    if (logged) el.classList.add   ('hidden');
+    else        el.classList.remove('hidden');
+  });
+
+  if (logged) {
+    document.querySelectorAll('#profile-name, #profile-name-mobile')
+      .forEach(el => el.textContent = name);
+  }
+});
+
+
+    function animateTitle() {
+    const title = document.getElementById('intro-title');
+    if (!title) return;
+    title.classList.add('opacity-0', '-translate-y-10');
+    title.classList.remove('opacity-100', 'translate-y-0');
+    setTimeout(() => {
+      title.classList.remove('opacity-0', '-translate-y-10');
+      title.classList.add('opacity-100', 'translate-y-0');
+    }, 50);
+  }
+
+  window.addEventListener('DOMContentLoaded', animateTitle);
+  window.addEventListener('pageshow', (event) => {
+    animateTitle();
+  });
+
+  </script>
+  <title>VaszilijEdc – Blog</title>
+</head>
+<body class="bg-[#d9edfa] text-gray-800 overflow-x-hidden">
+<nav id="navbar" class="bg-[#101f4a] fixed w-full z-10 shadow-lg transition-transform duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex-shrink-0">
+          <a href="/" class="text-xl font-bold text-white hover:text-indigo-400 transition">VaszilijEdc</a>
+        </div>
+       <div class="hidden md:flex space-x-8">
+    <a href="/Blog" class="relative text-white hover:text-indigo-400 transition">
+        <span class="pb-1 after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-indigo-400 after:transition-all after:duration-300 hover:after:w-full">
+        Blog
+        </span>
+    </a>
+    <div class="relative group">
+        <button class="flex items-center text-white hover:text-indigo-400 transition pb-1">
+        <span class="relative">
+            Írások
+            <span class="absolute left-0 bottom-0 h-0.5 w-full bg-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+        </span>
+        <svg class="ml-1 h-4 w-4 text-white group-hover:text-indigo-400 transition-transform duration-300 group-hover:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+        </button>
+        <div class="absolute left-0 mt-2 w-40 bg-[#101f4a] rounded-md shadow-lg opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transform -translate-y-2 transition-all duration-200 z-20">
+        <a href="#" class="block px-4 py-2 text-white hover:text-indigo-400 transition">Kések</a>
+        <a href="#" class="block px-4 py-2 text-white hover:text-indigo-400 transition">Multitool</a>
+        <a href="#" class="block px-4 py-2 text-white hover:text-indigo-400 transition">Novella</a>
+        <a href="#" class="block px-4 py-2 text-white hover:text-indigo-400 transition">Egyebek</a>
+        </div>
+        </div>
+        <button id="open-modal" class="relative text-white hover:text-indigo-400 transition">
+            <span class="pb-1 after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-indigo-400 after:transition-all after:duration-300 hover:after:w-full">Üzenetküldés</span>
+          </button>
+        <a href="/Tamogatas" class="relative text-white hover:text-indigo-400 transition">
+            <span class="pb-1 after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-indigo-400 after:transition-all after:duration-300 hover:after:w-full">
+            Támogatás
+            </span>
+        </a>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="relative hidden md:block group">
+        <button class="p-1 rounded-full text-white hover:text-indigo-400 transition transform hover:scale-110 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5.121 17.804A13.937 13.937 0 0112 15c2.897 0 5.584.861 
+                    7.879 2.342M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+        </button>
+       <div class="absolute right-0 mt-2 w-40 bg-[#101f4a] rounded-md shadow-lg 
+         opacity-0 group-hover:opacity-100 transform -translate-y-2 group-hover:translate-y-0 
+         transition-all duration-200 z-20">
+          <div id="profile-logged-in" class="profile-logged hidden">
+            <div class="px-4 py-2 text-white">
+              Belépve mint <strong id="profile-name">Vendég</strong>
+            </div>
+            <div class="border-t border-white/20 my-1"></div>
+            <a href="/logout" class="block px-4 py-2 text-white hover:text-indigo-400 transition">Kijelentkezés</a>
+          </div>
+          <div id="profile-guest" class="profile-guest hidden">
+            <a href="/login" class="block px-4 py-2 text-white hover:text-indigo-400 transition">Bejelentkezés</a>
+            <a href="/register" class="block px-4 py-2 text-white hover:text-indigo-400 transition">Regisztráció</a>
+          </div>
+        </div>
+          </div>
+          <button id="menu-btn" class="md:hidden p-2 text-white hover:text-indigo-400 focus:outline-none transition transform hover:scale-110">
+            <svg id="icon-open" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="icon-close" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="md:hidden overflow-hidden max-h-0 transition-all duration-500 bg-[#0a122a]/90">
+      <a href="#" class="block px-4 py-2 text-white hover:bg-indigo-400/20 transition">Blog</a>
+      <div class="group">
+        <button class="w-full text-left px-4 py-2 flex items-center justify-between text-white hover:bg-indigo-400/20 transition">
+          Írások
+          <svg class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div class="hidden group-hover:block bg-[#0a122a]/80">
+          <a href="#" class="block px-6 py-2 text-white hover:bg-indigo-400/20 transition">Kések</a>
+          <a href="#" class="block px-6 py-2 text-white hover:bg-indigo-400/20 transition">Multitool</a>
+          <a href="#" class="block px-6 py-2 text-white hover:bg-indigo-400/20 transition">Novella</a>
+          <a href="#" class="block px-6 py-2 text-white hover:bg-indigo-400/20 transition">Egyebek</a>        
+        </div>
+      </div>
+      <button id="open-modal-mobile" class="w-full text-left px-4 py-2 text-white hover:bg-indigo-400/20 transition focus:outline-none">Üzenetküldés</button>     
+       <a href="/Tamogatas" class="block px-4 py-2 text-white hover:bg-indigo-400/20 transition">Támogatás</a>
+      <div class="border-t border-white/20 mt-2"></div>
+      <div id="profile-logged-in-mobile" class="profile-logged hidden px-4 py-2 text-white">
+          <div class="mb-2">Belépve mint <strong id="profile-name-mobile"></strong></div>
+          <a href="/logout" class="block px-4 py-2 hover:bg-indigo-400/20 transition">Kijelentkezés</a>
+        </div>
+        <div id="profile-guest-mobile" class="profile-guest hidden px-4 py-2 text-white">
+          <a href="/login" class="block px-4 py-2 hover:bg-indigo-400/20 transition">Bejelentkezés</a>
+          <a href="/register" class="block px-4 py-2 hover:bg-indigo-400/20 transition">Regisztráció</a>
+        </div>
+      </div>    
+    </nav>
+    <br>
+ <main class="max-w-8xl mx-auto p-6 space-y-12 pt-20">
+  <h2 id="intro-title"class="text-3xl font-bold text-center opacity-0 -translate-y-10 transform transition-all duration-700">„Ezeket a dolgokat cipelem.” </h2>  
+  <section class="max-w-7xl mx-auto px-4 py-16">
+<div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-12">      
+  <div class="group relative bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-md transform transition duration-500 hover:shadow-2xl hover:scale-105">
+        <div class="overflow-hidden">
+          <img src="https://vaszilijedc.hu/wp-content/uploads/2025/04/IMG_2549-400x250.jpeg" alt="" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+        </div>
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-semibold group-hover:text-indigo-600 transition-colors duration-300">We Banter -Újratöltve</h3>
+          <p class="text-gray-700 leading-relaxed">4 évvel ezelőtt született egy cikk Ben Petersen első saját tervezésű késéről ( We Banter ). Most, hogy megjelent a második generáció, valamint hogy lassan másfél éve használok egy módosított verziót az első szériából, elegendő oknak bizonyult, hogy újra górcső alá...</p>
+          <a href="#" class="inline-block px-6 py-2 bg-white border border-gray-800 rounded-full font-medium transition-all duration-300 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white shadow-sm hover:shadow-lg">
+            Megnézem
+          </a>
+        </div>
+    </div>
+    <div class="group relative bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-md transform transition duration-500 hover:shadow-2xl hover:scale-105">
+        <div class="overflow-hidden">
+          <img src="https://vaszilijedc.hu/wp-content/uploads/2025/04/20250222_1659167002-400x250.jpg" alt="" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+        </div>
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-semibold group-hover:text-indigo-600 transition-colors duration-300">Lali szamurájkardja</h3>
+          <p class="text-gray-700 leading-relaxed">Képzeljük el Lalit, aki nyílászárók beszerelésével keresi a kenyerét. Egyszerű építőipari munkás, aki már évek óta megbízható munkát végez. Szépen építgeti az életét, komoly barátnője van, saját lakásra gyűjt. Egyik reggel, amikor egy újépítésű házhoz szállnak ki a...</p>
+          <a href="#" class="inline-block px-6 py-2 bg-white border border-gray-800 rounded-full font-medium transition-all duration-300 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white shadow-sm hover:shadow-lg">
+            Megnézem
+          </a>
+        </div>
+    </div>
+    <div class="group relative bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-md transform transition duration-500 hover:shadow-2xl hover:scale-105">
+        <div class="overflow-hidden">
+          <img src="https://vaszilijedc.hu/wp-content/uploads/2025/03/IMG_2100-400x250.jpeg" alt="" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+        </div>
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-semibold group-hover:text-indigo-600 transition-colors duration-300">Olcsó János túrázni megy!</h3>
+          <p class="text-gray-700 leading-relaxed">Mindennapi életünk tele van rohanással, stresszhatásokkal. Meló, beosztás, család, egészség, mindennapi gondok. Ezek mellé még van egy jókora digitális függésem is. Képes vagyok naphosszat a telefon képernyőjét bámulni. Kell néha egy kis reboot vagy restart, egy kis...</p>
+          <a href="#" class="inline-block px-6 py-2 bg-white border border-gray-800 rounded-full font-medium transition-all duration-300 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white shadow-sm hover:shadow-lg">
+            Megnézem
+          </a>
+        </div>
+    </div>
+    <div class="group relative bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-md transform transition duration-500 hover:shadow-2xl hover:scale-105">
+        <div class="overflow-hidden">
+          <img src="https://vaszilijedc.hu/wp-content/uploads/2025/03/IMG_1892-400x250.jpeg" alt="" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+        </div>
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-semibold group-hover:text-indigo-600 transition-colors duration-300">Modern slip jointok-régi nóta újra hangszerelve</h3>
+          <p class="text-gray-700 leading-relaxed">Nem reprezentatív (ismerőseim egy részét felölelő) mintán végzett kutatásom szerint a mai napig a legtöbbeknek a bicska szó hallatán apa vagy nagypapa tradicionális, magyar gyártmányú kézműves bicskája, vagy a „svájci” bicska jut eszébe. Bár az előbbi jellegzetesen...</p>
+          <a href="#" class="inline-block px-6 py-2 bg-white border border-gray-800 rounded-full font-medium transition-all duration-300 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white shadow-sm hover:shadow-lg">
+            Megnézem
+          </a>
+        </div>
+    </div>
+    <div class="group relative bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-md transform transition duration-500 hover:shadow-2xl hover:scale-105">
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-semibold group-hover:text-indigo-600 transition-colors duration-300">Manuális élezők,avagy magad uram, ha szolgád nincsen</h3>
+          <p class="text-gray-700 leading-relaxed">Ebben a - vasárnap reggeli kávé mellé szánt - írásban az itthon leggyakrabban használt manuális (nem elektromos) késélező eszközöket veszem górcső alá. Nem teszt, hanem rövid bemutató jelleggel. A legegyszerűbb eszköztől haladok az összetett rendszerek felé. Az...</p>
+          <a href="#" class="inline-block px-6 py-2 bg-white border border-gray-800 rounded-full font-medium transition-all duration-300 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white shadow-sm hover:shadow-lg">
+            Megnézem
+          </a>
+        </div>
+    </div>
+    <div class="group relative bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-md transform transition duration-500 hover:shadow-2xl hover:scale-105">
+        <div class="overflow-hidden">
+          <img src="https://vaszilijedc.hu/wp-content/uploads/2025/01/Kep1-400x250.jpg" alt="" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+        </div>
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-semibold group-hover:text-indigo-600 transition-colors duration-300">Svörd Peasant</h3>
+          <p class="text-gray-700 leading-relaxed">Magányos túrázó sétál a Fekete-Körös gátján a táborhelye felé. Apró hobó kályhájában ropog a tűz. Sült szalonna és lilahagyma illata terjeng a táborhelyen. A túrázó fatányéron katonázza a falatokat surlódó záras bicskájával. Legalábbis ez a kép jelent meg a szemeim...</p>
+          <a href="#" class="inline-block px-6 py-2 bg-white border border-gray-800 rounded-full font-medium transition-all duration-300 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white shadow-sm hover:shadow-lg">
+            Megnézem
+          </a>
+        </div>
+    </div>
+    <div class="group relative bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-md transform transition duration-500 hover:shadow-2xl hover:scale-105">
+        <div class="overflow-hidden">
+          <img src="https://vaszilijedc.hu/wp-content/uploads/2025/02/IMG_1814-400x250.jpeg" alt="" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+        </div>
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-semibold group-hover:text-indigo-600 transition-colors duration-300">Amikor a hóhért akasztják, avagy mi fán terem az Ultras</h3>
+          <p class="text-gray-700 leading-relaxed">A blog cikkei egyre-másra  kerülnek ki az oldalra, forognak közszájon, hála az internetnek. Sokan régi ismerősként üdvözlik egyik-másik bemutató alanyát, másoknak  pedig az újdonság erejével hat egy-egy megjelenő írás főszereplője. Igen ám, de a cikkek nem a bokorban...</p>
+          <a href="#" class="inline-block px-6 py-2 bg-white border border-gray-800 rounded-full font-medium transition-all duration-300 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white shadow-sm hover:shadow-lg">
+            Megnézem
+          </a>
+        </div>
+    </div>
+     <div class="group relative bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-md transform transition duration-500 hover:shadow-2xl hover:scale-105">
+        <div class="overflow-hidden">
+          <img src="https://vaszilijedc.hu/wp-content/uploads/2024/12/IMG_2113-400x250.jpeg" alt="" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+        </div>
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-semibold group-hover:text-indigo-600 transition-colors duration-300">Aranyhal a viperafészekből</h3>
+          <p class="text-gray-700 leading-relaxed">A Viper Koit vagy 3 éve vettem egy helyi éltárstól, másodkézből. Nagyon tetszett a képeken és bemutató videókon, hamar elkapott a “ kell “ érzés. A cikk végére kiderül, megérte-e. Egy kis történelem A Tecnocut snc-t 1987- ben alapították az olaszországi Maniagoban....</p>
+          <a href="#" class="inline-block px-6 py-2 bg-white border border-gray-800 rounded-full font-medium transition-all duration-300 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white shadow-sm hover:shadow-lg">
+            Megnézem
+          </a>
+        </div>
+    </div>
+     <div class="group relative bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-md transform transition duration-500 hover:shadow-2xl hover:scale-105">
+        <div class="overflow-hidden">
+          <img src="https://vaszilijedc.hu/wp-content/uploads/2025/01/20241221_1020060742-400x250.jpg" alt="" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+        </div>
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-semibold group-hover:text-indigo-600 transition-colors duration-300">Olfa CK-2 Kés helyett sniccer?</h3>
+          <p class="text-gray-700 leading-relaxed">A tékozló fiú visszatér  Pár éve, mikor a  Tops cég Lil Roughneck nevű késének bűvkörében éltem, azon gondolkodtam, hogy azért kellene az említett mini tankhámozó mellé valami olyan kés is, ami nemcsak repeszteni, hanem vágni is tud. Ezirányú keresgélésem közben akadt...</p>
+          <a href="#" class="inline-block px-6 py-2 bg-white border border-gray-800 rounded-full font-medium transition-all duration-300 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white shadow-sm hover:shadow-lg">
+            Megnézem
+          </a>
+        </div>
+    </div>
+     <div class="group relative bg-gray-100 border border-gray-300 rounded-xl overflow-hidden shadow-md transform transition duration-500 hover:shadow-2xl hover:scale-105">
+        <div class="overflow-hidden">
+          <img src="https://vaszilijedc.hu/wp-content/uploads/2024/12/Kep1-400x250.jpg" alt="" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" />
+        </div>
+        <div class="p-6 space-y-4">
+          <h3 class="text-xl font-semibold group-hover:text-indigo-600 transition-colors duration-300">Byrd Cara cara 2</h3>
+          <p class="text-gray-700 leading-relaxed">A Byrd Cara cara 2-t egy impulzusvásárlás során szereztem be használtan, jóárasítva. Egy potenciális munkakést, mentőkést láttam benne. Az évek során bebizonyította, hogy egy igazi “igásló”, amire mindig lehet számítani. Egy kis háttér: A Byrd a Spyderco...</p>
+          <a href="#" class="inline-block px-6 py-2 bg-white border border-gray-800 rounded-full font-medium transition-all duration-300 group-hover:bg-indigo-600 group-hover:border-indigo-600 group-hover:text-white shadow-sm hover:shadow-lg">
+            Megnézem
+          </a>
+        </div>
+    </div>
+    </div>
+  </section>
+  <div class="max-w-3xl mx-auto px-4">
+    <div class="relative" style="padding-top: 56.25%;">
+      <iframe
+        class="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
+        src="https://www.youtube.com/embed/0VRhcXBykbs"
+        title="YouTube videó"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</main>
+  <footer class="bg-[#101f4a] py-3">
+    <div class="max-w-4xl mx-auto px-4 text-center text-white">
+      <div class="mt-6 text-sm flex flex-col sm:flex-row justify-center gap-4">
+        <a href="#" class="hover:text-indigo-400">Impresszum</a>-
+        <a href="#" class="hover:text-indigo-400">Jogi nyilatkozat</a>-
+        <a href="#" class="hover:text-indigo-400">Cookie-Kezelés</a>-
+        <a href="#" class="hover:text-indigo-400">Adatkezelés</a>
+      </div>
+      <p class="mt-6 text-sm">&copy; VaszilijEdc, 2025.</p>
+    </div>
+  </footer>
+   <div id="modal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-[#8ac7ed] rounded-lg w-full max-w-md mx-4 p-6 relative">
+      <button id="close-modal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <h2 class="text-2xl font-bold mb-4 text-center">Üzenetküldés</h2>
+       <form id="message-form" action="/PHP/save_message.php" method="post" class="space-y-4">
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Név (kötelező)</label>
+    <input type="text" name="name" required class="mt-1 block w-full border border-gray-300 rounded p-2" />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Email cím (kötelező)</label>
+    <input type="email" name="email" required class="mt-1 block w-full border border-gray-300 rounded p-2" />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Tárgy</label>
+    <input type="text" name="subject" class="mt-1 block w-full border border-gray-300 rounded p-2" />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Üzenet</label>
+    <textarea name="message" required class="mt-1 block w-full border border-gray-300 rounded p-2 h-32"></textarea>
+  </div>
+  <div class="flex items-center">
+    <input type="checkbox" id="gdpr" name="gdpr" required class="h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+    <label for="gdpr" class="ml-2 text-sm text-gray-700">Elfogadom az Adatkezelési tájékoztatót.</label>
+  </div>
+  <div class="text-center">
+    <button type="submit" class="px-4 py-3 bg-indigo-500 text-white rounded hover:bg-indigo-700 transition">Küldés</button>
+  </div>
+</form>
+    </div>
+  </div>
+</body>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const role = localStorage.getItem("vaszilij_userdata");
+
+  if (role === "admin") {
+    const desktopMenu = document.getElementById("profile-logged-in");
+    if (desktopMenu) {
+      const msgLink = document.createElement("a");
+      msgLink.href = "/admin";
+      msgLink.className = "block px-4 py-2 text-white hover:text-indigo-400 transition";
+      msgLink.textContent = "Üzenetek";
+
+      const logout = desktopMenu.querySelector('a[href="/logout"]');
+      if (logout) desktopMenu.insertBefore(msgLink, logout);
+    }
+
+    const mobileMenu = document.getElementById("profile-logged-in-mobile");
+    if (mobileMenu) {
+      const msgLinkMob = document.createElement("a");
+      msgLinkMob.href = "/admin";
+      msgLinkMob.className = "block px-4 py-2 text-white hover:text-indigo-400 transition";
+      msgLinkMob.textContent = "Üzenetek";
+
+      const logoutMob = mobileMenu.querySelector('a[href="/logout"]');
+      if (logoutMob) mobileMenu.insertBefore(msgLinkMob, logoutMob);
+    }
+  }
+});
+
+
+
+</script>
+
+</html>
